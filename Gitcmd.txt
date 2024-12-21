@@ -1,0 +1,14 @@
+Git clone "url"
+
+Git add .
+
+Git commit -m "msg"
+
+Git push -u origin main
+
+Git checkout -b branchname
+
+Git push -u origin branchname
+
+
+Git pull -v origin branchname
