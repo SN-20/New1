@@ -1,0 +1,54 @@
+Docker login
+
+Docker build -t sp3002/repo:tag .
+
+Docker run sp3002/repo:tag
+
+Docker push sp3002/repo:tag
+
+
+
+for html
+Docker run -p 9802:80 sp3002/repo:tag
+
+<name_of_the_folder> -> this should have java file, java.class file, Dockerfile
+
+I) create program file
+II) run it
+III) create Dockerfile
+
+# Use the official OpenJDK image as a parent image
+FROM openjdk:latest
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY .   /app
+
+# Compile the Java code
+RUN javac HelloWorld.java
+
+# Run the program when the container starts
+CMD ["java", "HelloWorld"]
+
+IV) build docker image
+docker build -t <name_of_the_folder>  .
+
+V) Run the Docker container
+docker run <name_of_the_folder>
+
+VI) login in docker
+docker login -u <username>
+
+VII) for password create personal token in the docker settings
+
+VIII) tag the local image
+docker tag <name_of_the_folder> <username>/<image_name>:<version>
+
+IX) Push the image to Docker Hub
+docker push <username>/<image_name>:<version>
+
+
+
+docker run -d -p 8080:80 <folder_name> -> to run the html docker image

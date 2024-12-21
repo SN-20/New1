@@ -1,0 +1,250 @@
+#!/bin/bash
+
+# Create a directory if it doesn't exist
+if [ ! -d "my_directory" ]; then
+    mkdir my_directory
+    echo "Directory 'my_directory' created."
+fi
+
+# Move into the directory
+cd my_directory
+
+# Create a new file
+echo "Hello, world!" > my_file.txt
+echo "Contents written to 'my_file.txt'."
+
+# Display file content
+echo "Contents of 'my_file.txt':"
+cat my_file.txt
+
+# Append to the file
+echo "Appending more text." >> my_file.txt
+echo "Additional content appended."
+
+# Display file content again
+echo "Contents of 'my_file.txt' after appending:"
+cat my_file.txt
+
+# Copy the file
+cp my_file.txt my_file_copy.txt
+echo "'my_file.txt' copied to 'my_file_copy.txt'."
+
+# Rename the file
+mv my_file_copy.txt my_new_file.txt
+echo "'my_file_copy.txt' renamed to 'my_new_file.txt'."
+
+# Check if a file exists
+if [ -e "my_new_file.txt" ]; then
+    echo "'my_new_file.txt' exists."
+fi
+
+# Delete the original file
+rm my_file.txt
+echo "'my_file.txt' deleted."
+
+# List files in the directory
+echo "Files in the directory:"
+ls
+
+# Move out of the directory
+cd ..
+
+# Remove the directory and its contents
+rm -r my_directory
+echo "Directory 'my_directory' and its contents removed."
+
+---------------------------------------------------------
+Calculate Average using Bash Calculator
+
+#!/bin/bash
+
+read -p "Enter marks in subject 1: " marks1
+read -p "Enter marks in subject 2: " marks2
+read -p "Enter marks in subject 3: " marks3
+
+total=$(( $marks1 + $marks2 + $marks3 ))
+
+echo "Total marks: $total"
+
+avg=$( echo "scale=4; $total / 3" | bc )
+
+echo "Average marks: $avg"
+
+--------------------------------------------------
+select command
+PS3="What is the day of the week?: "
+
+select day in mon tue wed thu fri sat sun;
+do
+echo "You selected $day"
+break
+done
+
+---------------------------------------------------
+Create the file employee.txt having colon (: ) separated fields. 
+The fields of the record are: enumber, ename, eposition, esal, edoj, edept. 
+And now answer the following:
+List all the employees along with a row number
+Sort the file as per the names
+List top three salaried employees
+Remove duplicate records from the file
+List dept. no along with no. of employees working in each dept.
+Sort the file in descending order of salary
+a. nl employee.txt
+b. sort -t':' -k2 employee.txt
+c. sort -t':' -k4nr employee.txt | head -n 3
+d. sort -u -t':' -k1,1 employee.txt
+e. while IFS=':' read -r _ _ _ _ _ edept; do
+    echo "$edept"
+done < employee.txt | sort | uniq -c
+f. sort -t':' -k4nr employee.txt
+
+--------------------------------------------------
+Accept roll number from the user at the command line. Search it in the “student” file. If it is present, then display name, percentage, grade and class of the student. If the roll number is not present, then display a message “not found”. Allow the user to enter any number of queries.
+
+
+#!/bin/bash
+
+# Function to search for roll number in student file
+search_roll_number() {
+    roll_number="$1"
+    found=false
+    while read -r line; do
+        rno=$(echo "$line" | cut -d ' ' -f 1)
+        if [[ "$rno" == "$roll_number" ]]; then
+            found=true
+            name=$(echo "$line" | cut -d ' ' -f 2)
+            percentage=$(echo "$line" | cut -d ' ' -f 7)
+            grade=$(echo "$line" | cut -d ' ' -f 8)
+            class=$(echo "$line" | cut -d ' ' -f 9)
+            echo "Roll Number: $roll_number"
+            echo "Name: $name"
+            echo "Percentage: $percentage"
+            echo "Grade: $grade"
+            echo "Class: $class"
+            break
+        fi
+    done < student
+    if [ "$found" == "false" ]; then
+        echo "Roll number $roll_number not found."
+    fi
+}
+
+# Check if a roll number was provided as argument
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <roll_number>"
+    exit 1
+fi
+
+# Call search function with provided roll number
+search_roll_number "$1"
+
+------------------------------------------------------------------
+Ask for a file extension from the user. Find all files matching that extension in the current directory. Then find all files matching that extension in user home directory. Display both file lists.
+
+#!/bin/bash
+
+read -p "Enter the file extension (e.g., txt, pdf): " file_extension
+
+# Find files in the current directory
+current_dir_files=$(find . -type f -name "*.$file_extension")
+
+# Find files in the user's home directory
+home_dir_files=$(find ~ -type f -name "*.$file_extension")
+
+echo "Files in the current directory:"
+echo "$current_dir_files"
+
+echo "Files in your home directory:"
+echo "$home_dir_files"
+
+-------------------------------------------------------------------
+Modify the example. At the end, create a zip file named new.zip of all the files that were found.
+
+#!/bin/bash
+
+read -p "Enter the file extension (e.g., txt, pdf): " file_extension
+
+archive_name="new.zip"
+
+# Find files in the current directory
+current_dir_files=$(find . -type f -name "*.$file_extension")
+
+# Find files in the user's home directory
+home_dir_files=$(find ~ -type f -name "*.$file_extension")
+
+# Combine the file lists
+all_files="$current_dir_files $home_dir_files"
+
+# Check if any files were found
+if [[ -z "$all_files" ]]; then
+  echo "No files found with the extension '$file_extension'."
+  exit 1
+fi
+
+# Create the archive using zip
+zip -r "$archive_name" $all_files
+
+echo "Created archive: $archive_name"
+
+# Alternative: Create a tar archive
+# tar -cf "$archive_name" $all_files
+--------------------------------------------------------------------
+ls | grep .txt	
+ls > filelist.txt Store the output of the ls command in a file called filelist.txt
+
+------------------------------------------------------------------
+RE
+
+
+ls a* - List all files whose names start with a, file extension may or may not be there
+ls a*.pqr - List all files whose names start with a, but file extension should be pqr
+ls *.txt – Files that have extension txt
+ls *.sh *.txt - Files that have extension txt or sh
+ls Great*by.txt - Files whose name starts with Great, ends with by, and have extension txt
+ls ?i* - Files whose names have i as the second character
+ls *.??? – Files with any name, but exactly three characters in the extension
+ls [sv]* - Files whose names begin with s or v
+ls [s-v]* - Files whose names begin with any letter between s and v
+ls *[0-9]* - Files whose names include at least one digit
+ls [afgh]*o* - Files whose names start with a letter between and h and followed anywhere by letter o
+
+We can use character classes to check for substrings or to do other comparisons
+They are an alternative to the earlier wildcard syntax
+Examples: 
+‘[:alpha:]’ instead of ‘[A-Za-z]’
+‘[:lower:]’ instead of ‘[a-z]’
+‘[:upper:]’ instead of ‘[A-Z]’
+‘[:alphanum:]’ instead of ‘[0-9A-Za-z]’
+‘[:digit:]’ instead of ‘[0-9]’
+Note: If we are using these in bash commands, we need two square brackets – See next slide
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,406 @@
+> content written in this way are shell commands
+
+kernel is used to communicate with hardware
+
+shell is like ui to complete tasks in linux
+
+different types of shell
+bash(most commonly used), sh, ksh, tsh, fish, zsh
+
+> echo $0 -> bash (means default shell is bash)
+
+> whoami -> students
+
+in file use
+#!/bin/bash (#! -> this is called shibang)
+to tell the os to use which interpreter
+its not mandatory to use but good practice
+
+to clear terminal - ctrl + l
+
+to make a file use
+touch file_name.sh
+or
+vi file_name.sh
+
+> cat file_name (to read the file)
+
+echo is used to show on terminal
+
+
+to run the script file -> 
+1. make sure script has execute permission rwx
+2. run using (./script.sh, /path/script.sh, bash script.sh) need execute permission to run using 1st 2 commands
+3. ctrl+c to terminate, ctrl+z to stop
+
+chmod +x 01_basic.sh (to add the execute permission)
+
+----------------------------------------------------------------
+COMMENTS-
+# - single line comment
+<<some_name
+..your comment..
+some_name
+
+------------------------------------------------------------------
+VARIABLES-
+var_name=value
+var_name=$(hostname) ->used to store the output of shell command
+readonly var_name=value (to make constant variable)
+
+echo $var_name
+
+-------------------------------------------------------------------
+ARRAYS-can store values of different types
+myArray=( 1 2 Hello "Hey man")
+
+echo "${myArray[0]}"
+
+how to get length of an array?
+echo ${#myArray[*]}
+
+how to get specified values?
+echo "${myArray[*]:1}"
+echo "${myArray[*]:1:2}" (${myArray[*]:starting_index:no_of_values_from_starting_index})
+
+how to update an array?
+myArray+=( 5 6 7 8 )
+
+KEY VALUE PAIR-
+declare ~A myArray
+myArray=( [name]=Sonal [age]=20 )
+
+echo "${myArray[name]}"
+
+--------------------------------------------------------------------
+STRING OPERATIONS-
+myVar="Hello WORLD!!"
+length=${#myVar}
+upper=${myVar^^}
+lower=${myVar,,}
+replace=${myVar/World/Buddy} (str_name/wordTobeChanged/theReplacingword)
+slice=${myVar:6:11} (${myArray:starting_index:no_of_values_from_starting_index})
+
+
+#!/bin/bash
+
+--------------------------------------------------------------------
+USER INTERACTION
+
+read name
+or
+read -p "Your Name" name
+
+--------------------------------------------------------------------
+ARITHMETIC OPERATIONS
+i)using let command
+let mul=$x*$y
+
+ii)using (( ))
+echo $(($x*$y))
+
+--------------------------------------------------------------------
+CONDITIONAL STATEMENTS
+I] IF ELSE
+if [ $marks -gt 40 ] (can use double bcoz it is enhanced version)
+then
+	echo "You are Pass"
+else
+	echo "You are Fail"
+if
+
+if [[ $marks -ge 60 ]] 
+then
+	echo "1st class"
+elif [[ $marks -ge 20 ]]
+then 
+	echo "2nd class"
+else
+	echo "3rd class"
+if
+
+shorthand for ifelse
+
+[[ condition ]] && echo "echo's if condition is true" || echo "echo's if condition is false"
+
+--------------------------------------------------------------------
+COMPARISON OPERATORS
+-eq/==	|equal to (-eq for numbers, == for string)
+-ge	|greater than equal to
+-le	|less than equal to
+-no/!=	|not equal to
+-gt	|greater than
+-lt	|less than
+
+TO COPY FROM ONE FILE TO ANOTHER
+cp sourceFile destinationFile
+
+
+II] SWITCH CASE
+echo "hey choose an option"
+echo "a = to see the current date"
+echo "b = list all the files in current dir"
+
+read choice
+
+case $choice in
+	a) date;;
+	b) ls;;
+	*) echo "Non a valid input"
+esac
+
+--------------------------------------------------------------------
+LOGICAL OPERATORS
+&&
+||
+!
+
+LOOPS
+I] FOR LOOP
+
+for i in 1 2 3 4 5
+do
+	echo "Number is $i"
+done
+
+for j in Raju Sham Baburao
+for p in {1..20}
+
+--------------------------------------------------------------------
+FOR LOOP IN FILES
+FILE="/home/students/Desktop/ShellScript/names.txt"
+
+for name in $(cat $FILE)
+do
+        echo "Name is $name"
+done
+
+--------------------------------------------------------------------
+FOR LOOP FOR ARRAY
+	
+myArray=( 1 2 3 Hello Hi )
+
+length=${#myArray[*]}
+
+for (( i=0;i<$length;i++ ))
+do
+        echo "Value of array is ${myArray[$i]}"
+done
+
+--------------------------------------------------------------------
+WHILE LOOP
+count=0
+num=10
+
+while [[ $count -le $num ]]
+
+do
+        echo "Numbers are $count"
+        let count++
+done
+
+--------------------------------------------------------------------
+UNTIL LOOP - in this the loop stops when the condition is true
+a=10
+
+until [ $a -eq 1 ]
+do
+	echo $a
+	a=`expr $a - 1`
+done
+
+-------------------------------------------------------------------
+INFINTE LOOP
+
+USING WHILE LOOP
+while true
+do
+        echo "Hi buddy from while loop"
+        sleep 2s
+done
+
+USING FOR LOOP
+for (( ;; ))
+do
+        echo "Hi buddy from for loop"
+        sleep 2s
+
+done
+
+--------------------------------------------------------------------
+READ CONTENT FROM THE FILE
+while read myvar
+do
+        echo "Value from file is $myvar"
+done < <give full path of the file>
+
+if file in same directory then only give <name of the file>
+
+---------------------------------------------------------------------
+READ CSV FILE
+while IFS="," read id name age
+do
+        echo "Id = $id, Name = $name, Age = $age"
+done < test.csv
+
+
+USING AWK command
+cat test.csv | awk 'NR!=1 {print}' | while IFS="," read id name age
+do
+        echo "$id $name $age"
+done
+
+---------------------------------------------------------------------
+FUNCTIONS
+function myfun {
+	echo "HI"
+}
+
+myfun() {
+	echo "Hello"
+}
+
+myfun
+
+welcomeNote() {
+        # $1 tells to take the 1st argument
+        echo "Welcome $1"
+}
+
+welcomeNote SOnal
+welcomeNote Ashita
+welcomeNote Vidya
+welcomeNote Ashok
+
+---------------------------------------------------------------------------
+SHELL COMMAND ARGUMENTS
+echo "First argument is $1"
+echo "Second argument is $2'
+
+echo "All the arguments are - $@"
+echo "Number of arguments are - $#"
+
+for filename in $@
+do
+	echo "Coping file - $filename"
+done
+
+---------------------------------------------------------------------------
+SHIFTING
+echo "Creating user"
+echo "Username is $1"
+
+shift
+echo "Description is $@" 
+
+---------------------------------------------------------------------------
+BREAK
+no=6
+
+for i in 1 2 3 4 5 6 7 
+do
+	if [[ $no -eq $i ]]
+	then 
+		echo "$no is found"
+		break
+	fi
+	echo "Number is $i"
+done
+
+----------------------------------------------------------------------------
+CONTINUE
+for i in 1 2 3 4 5 6
+do
+	let r=$i%2
+	if [[ $r -eq 0 ]]
+	then 
+		continue
+	fi
+	echo "odd no. is $i"
+done
+
+----------------------------------------------------------------------------
+SLEEP
+sleep time  (2s, 3s,....)
+
+----------------------------------------------------------------------------
+EXIT
+exit - to stop script at a point
+
+exit status $? - gives you status of previous command if that was successful
+
+----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
